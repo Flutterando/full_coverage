@@ -1,6 +1,6 @@
 name: full_coverage
 description: A package script for allowing coverage test tool to see all Dart files.
-version: 0.0.1
+version: 0.0.2
 homepage: https://github.com/Flutterando/full_coverage
 
 environment:
