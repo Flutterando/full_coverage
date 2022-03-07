@@ -28,6 +28,16 @@ Or add the cache-system to your PATH environment variable for run directly.
 ```
 full_coverage
 ```
+## Other commands
+
+```
+-i, --ignore       Ignore files. ex (*_widget.dart,*_page.dart).
+-h, --[no-]help    usage doc.
+```
+
 
 For more details [Telegram Group Flutterando](https://t.me/flutterando).
+
+
+
 

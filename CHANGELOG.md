@@ -1,3 +1,6 @@
+## 0.0.3
+
+- Added ignoreFiles options
 ## 0.0.2+1
 
 - fix windows slash

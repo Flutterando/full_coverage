@@ -1,7 +1,36 @@
 import 'dart:io';
 
+import 'package:path/path.dart';
+
 class FullCoverage {
-  static Future<void> execute(String workDir) async {
+  bool _hasNotPartOfImport(FileSystemEntity file) {
+    if (file is! File) {
+      return false;
+    }
+    final lines = file.readAsStringSync().split('\n');
+    for (var line in lines) {
+      if (RegExp('part of [\'"].+[\'"];').hasMatch(line)) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  bool notIgnoreFiles(FileSystemEntity file, {List<String> ignoreFiles = const []}) {
+    final name = basename(file.path);
+
+    for (var ignore in ignoreFiles) {
+      final expression = '^${ignore.replaceAll('*', '(.*)?')}\$';
+      if (RegExp(expression).hasMatch(name)) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  Future<void> execute(String workDir, {List<String> ignoreFiles = const []}) async {
     final slash = Platform.pathSeparator;
 
     workDir = workDir.isEmpty ? workDir : '$workDir$slash';
@@ -10,7 +39,12 @@ class FullCoverage {
     final dir = Directory('${workDir}lib');
     final name = File('${workDir}pubspec.yaml').readAsStringSync().split('\n').first.replaceFirst('name: ', '').trim();
 
-    final filter = dir.list(recursive: true).where((event) => event is File).where((event) => event.path.endsWith('.dart'));
+    final filter = dir
+        .list(recursive: true)
+        .where((event) => event is File)
+        .where((event) => event.path.endsWith('.dart'))
+        .where(_hasNotPartOfImport)
+        .where((event) => notIgnoreFiles(event, ignoreFiles: ignoreFiles));
 
     final importList = <String>[];
 
