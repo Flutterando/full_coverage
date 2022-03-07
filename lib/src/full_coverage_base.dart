@@ -15,7 +15,9 @@ class FullCoverage {
     final importList = <String>[];
 
     await for (var item in filter) {
-      importList.add('import \'${item.path.replaceFirst('lib', 'package:$name')}\';');
+      var path = 'import \'${item.path.replaceFirst('lib', 'package:$name')}\';';
+      path = path.replaceAll(r'\', '/');
+      importList.add(path);
     }
 
     final buffer = StringBuffer();
