@@ -55,7 +55,7 @@ class FullCoverage {
     }
 
     final buffer = StringBuffer();
-    buffer.writeln('// ignore_for_file: unused_import');
+    buffer.writeln('// ignore_for_file: unused_import, directives_ordering');
 
     for (var item in importList) {
       buffer.writeln(item);
