@@ -39,16 +39,19 @@ class FullCoverage {
     final dir = Directory('${workDir}lib');
     final name = File('${workDir}pubspec.yaml').readAsStringSync().split('\n').first.replaceFirst('name: ', '').trim();
 
-    final filter = dir
+    final filter = await dir
         .list(recursive: true)
         .where((event) => event is File)
         .where((event) => event.path.endsWith('.dart'))
         .where(_hasNotPartOfImport)
-        .where((event) => notIgnoreFiles(event, ignoreFiles: ignoreFiles));
+        .where((event) => notIgnoreFiles(event, ignoreFiles: ignoreFiles))
+        .toList();
+
+    filter.sort((a, b) => a.path.compareTo(b.path));
 
     final importList = <String>[];
 
-    await for (var item in filter) {
+    for (var item in filter) {
       var path = 'import \'${item.path.replaceFirst('lib', 'package:$name')}\';';
       path = path.replaceAll(r'\', '/');
       importList.add(path);
